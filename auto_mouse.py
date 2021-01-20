@@ -1,22 +1,60 @@
-import pyautogui
+from tkinter import *
 import time
+import pyautogui
+import threading
+import keyboard
+
+resolution = 100
 
 posArray = []
-inputTime = 200
-mouseSpeed = 0.05
 
-print("10초동안 마우스 입력받습니다.")
+delay = 1 / resolution
+pyautogui.PAUSE = delay
 
-for i in range(inputTime):
-    pos = (pyautogui.position()[0], pyautogui.position()[1])
-    posArray.append(pos)
-    
-    time.sleep(mouseSpeed)
-    
-    print( round((200 - i) * mouseSpeed, 1), "s")
+pyautogui.FAILSAFE = False
 
-print("입력받은값 무한반복 시작.. \n 중단을 원할시 마우스를 왼쪽 상단 끝으로 보내세요.")
+root = Tk()
+root.title("automouse v0.1.0")
+root.geometry("250x500")
 
-while(True):
-    for i in range(len(posArray)):
-        pyautogui.moveTo(posArray[i])
+inputTime = Entry(root)
+inputTime.pack()
+inputTime.insert(0, 10)
+
+def btnClick():
+    time.sleep(1)
+    initTime = inputTime.get()
+    if initTime.isnumeric():
+        initTime = int(initTime)
+        btn['state'] = DISABLED
+        for i in range(initTime * resolution):
+            pos = (pyautogui.position()[0], pyautogui.position()[1])
+            posArray.append(pos)
+
+            notice['text'] = f'{round(initTime - (i * delay), 1)}s'
+            root.update()
+            time.sleep( delay )
+
+        notice['text'] = "PRESS Q TO EXIT"
+        root.update()
+
+        threading.Thread(target=moveMouse).start()
+    else:
+        notice['text'] = "enter only numbers"
+def moveMouse():
+    end = False
+    while(not end):
+        for i in range(len(posArray)):
+            pyautogui.moveTo(posArray[i])
+            if keyboard.is_pressed("q"):
+                end = True
+    posArray.clear()
+    btn['state'] = NORMAL
+
+btn = Button(root, text="start", command=btnClick)
+btn.pack()
+
+notice = Label(root, text="write second")
+notice.pack()
+
+root.mainloop()
