@@ -16,7 +16,7 @@
 
 ## Change Log
 
-[CHANGELOG.MD](https://github.com/syki66/auto-mouse/blob/master/CHANGELOG.md)
+[CHANGELOG.MD](https://github.com/syki66/auto-mouse/blob/master/CHANGELOG.MD)
 
 ---
 
