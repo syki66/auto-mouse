@@ -14,17 +14,17 @@ pyautogui.PAUSE = delay
 pyautogui.FAILSAFE = False
 
 root = Tk()
-root.title("automouse v0.1.0")
-root.geometry("250x500")
-
-inputTime = Entry(root)
-inputTime.pack()
-inputTime.insert(0, 10)
+root.title("AutoMouse v0.1.0")
+root.geometry("360x150")
+root.resizable(False, False)
 
 def btnClick():
-    time.sleep(1)
     initTime = inputTime.get()
     if initTime.isnumeric():
+        notice['text'] = "READY"
+        root.update()
+        time.sleep(2)
+
         initTime = int(initTime)
         btn['state'] = DISABLED
         for i in range(initTime * resolution):
@@ -35,12 +35,13 @@ def btnClick():
             root.update()
             time.sleep( delay )
 
-        notice['text'] = "PRESS Q TO EXIT"
+        notice['text'] = "PRESS \"Q\" TO EXIT"
         root.update()
 
         threading.Thread(target=moveMouse).start()
     else:
-        notice['text'] = "enter only numbers"
+        notice['text'] = "Enter only numbers"
+
 def moveMouse():
     end = False
     while(not end):
@@ -51,10 +52,15 @@ def moveMouse():
     posArray.clear()
     btn['state'] = NORMAL
 
-btn = Button(root, text="start", command=btnClick)
-btn.pack()
+inputTime = Entry(root, width=4, font=('Arial', 45, 'bold'), justify='center')
+inputTime.insert(0, 10)
 
-notice = Label(root, text="write second")
-notice.pack()
+btn = Button(root, text="Start", command=btnClick, font=('Arial', 30, 'bold'))
+
+notice = Label(root, text="Enter seconds")
+
+notice.pack(side="bottom", fill="both", padx=10, pady=10)
+inputTime.pack(side="left", padx=10, pady=10)
+btn.pack(side="right", padx=10, pady=10)
 
 root.mainloop()
